@@ -1,0 +1,30 @@
+package: main
+import:
+  - package: github.com/spf13/cobra
+    ref:     6efbf0b624dccb17ac2b965f9b729d424d80bf17
+  - package: github.com/spf13/pflag
+    ref:     08b1a584251b5b62f458943640fc8ebd4d50aaa5
+  - package: github.com/inconshreveable/log15
+    ref:     210d6fdc4d979ef6579778f1b6ed84571454abb4
+  - package: github.com/spf13/viper
+    ref:     e37b56e207dda4d79b9defe0548e960658ee8b6b
+  - package: github.com/BurntSushi/toml
+    ref:     056c9bc7be7190eaa7715723883caffa5f8fa3e4
+  - package: github.com/kr/pretty
+    ref:     e6ac2fc51e89a3249e82157fa0bb7a18ef9dd5bb
+  - package: github.com/mattn/go-colorable
+    ref:     51a7e7a8b1665b25ca173debdc8d52d493348f15
+  - package: github.com/mitchellh/mapstructure
+    ref:     281073eb9eb092240d33ef253c404f1cca550309
+  - package: github.com/spf13/cast
+    ref:     ee815aaf958c707ad07547cd62150d973710f747
+  - package: github.com/spf13/jwalterweatherman
+    ref:     c2aa07df593850a04644d77bb757d002e517a296
+  - package: gopkg.in/fsnotify.v1
+    ref:     7be54206639f256967dd82fa767397ba5f8f48f5
+  - package: gopkg.in/yaml.v2
+    ref:     53feefa2559fb8dfa8d81baad31be332c97d6c77
+  - package: github.com/kr/text
+    ref:     bb797dc4fb8320488f47bf11de07a733d7233e1f
+  - package: github.com/magiconair/properties
+    ref:     6ac0b95f449268951dd5c100682ea687a9866ea1
