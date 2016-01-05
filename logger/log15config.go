@@ -2,7 +2,7 @@
 package logger
 
 import (
-	"github.com/3dsim/solver-svc/config"
+	"github.com/3dsim/workflow/config"
 	log "github.com/inconshreveable/log15"
 	"os"
 )

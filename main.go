@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/3dsim/canary/commands"
+	"github.com/3dsim/workflow/commands"
 	"runtime"
 )
 
