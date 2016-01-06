@@ -28,3 +28,5 @@ import:
     ref:     bb797dc4fb8320488f47bf11de07a733d7233e1f
   - package: github.com/magiconair/properties
     ref:     6ac0b95f449268951dd5c100682ea687a9866ea1
+  - package: github.com/aws/aws-sdk-go
+    ref:     4f9a300f2af32035b3ae8bd0ce9b0fe8412df743

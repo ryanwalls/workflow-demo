@@ -20,5 +20,5 @@ func Execute() {
 }
 
 func addCommands() {
-	WorkflowCmd.AddCommand(end2EndCmd)
+	WorkflowCmd.AddCommand(deciderCmd)
 }
