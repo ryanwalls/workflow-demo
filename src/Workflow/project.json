@@ -10,6 +10,7 @@
   },
 
   "dependencies": {
+    "AWSSDK.SimpleWorkflow": "3.2.1-beta-*"
   },
 
   "commands": {
