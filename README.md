@@ -62,15 +62,6 @@ go test $(glide novendor)
 TODO
 
 ## To run locally
-
-### Using Docker run locally
-* Install docker and docker compose using the new docker toolbox: https://www.docker.com/toolbox
-* In root directory, run:
-```
-docker-compose up
-```
-
-### Using the command line
 * From root directory of project run
 ```
 go install
