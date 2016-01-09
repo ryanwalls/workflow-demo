@@ -1,2 +1,7 @@
 ---
 LogLevel: debug
+AwsRegion: us-west-2
+SupportOptimizationWorkflowName: SupportOptimizationWorkflow
+SupportOptimizationWorkflowVersion: "1.0"
+SupportOptimizationWorkflowDefaultTaskList: defaultTaskList
+SupportOptimizationWorkflowRetentionPeriod: 90

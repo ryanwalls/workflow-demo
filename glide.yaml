@@ -30,3 +30,7 @@ import:
     ref:     6ac0b95f449268951dd5c100682ea687a9866ea1
   - package: github.com/aws/aws-sdk-go
     ref:     4f9a300f2af32035b3ae8bd0ce9b0fe8412df743
+  - package: github.com/stretchr/testify
+    ref:     38b5d653e3cad9252e69070a3fe23377ab380557
+    subpackages:
+      - /mock
