@@ -23,6 +23,12 @@ https://golang.org/doc/install
 #### Setting up Intellisense in Atom (Mac/Windows)
 Install `go-plus` package https://github.com/joefitzgerald/go-plus
 
+If Intellisense isn't working, try the following
+```
+gocode close
+gocode -s -debug
+```
+
 ### Setting up Code directories
 Assuming your workspace folder is `c:\source\go`, setup  environment variable `GOPATH = c:\source\go`
 

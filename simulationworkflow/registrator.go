@@ -5,7 +5,6 @@ import (
 	"github.com/3dsim/workflow/logger"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/swf"
 	"github.com/aws/aws-sdk-go/service/swf/swfiface"
 )
@@ -25,8 +24,7 @@ type registrator struct {
 
 // NewRegistrator instantiates registrator
 func NewRegistrator() Registrator {
-	session := session.New(&aws.Config{Region: aws.String(config.Viper.GetString("AwsRegion"))})
-	return &registrator{swfAPI: swf.New(session)}
+	return &registrator{swfAPI: swf.New(NewSession())}
 }
 
 func (r *registrator) InitializeWorkflow() error {
@@ -44,6 +42,7 @@ func (r *registrator) RegisterSimulationWorkflow() error {
 		Domain:  aws.String(config.Viper.GetString("env")),
 		Name:    aws.String(config.Viper.GetString("SupportOptimizationWorkflowName")),
 		Version: aws.String(config.Viper.GetString("SupportOptimizationWorkflowVersion")),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDeciderTaskTimeout")),
 		DefaultTaskList: &swf.TaskList{
 			Name: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList")),
 		},

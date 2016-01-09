@@ -20,6 +20,6 @@ var deciderCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO run decider
+		simulationworkflow.NewDecider().Start()
 	},
 }

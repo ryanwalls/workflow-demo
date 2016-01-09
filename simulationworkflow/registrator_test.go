@@ -19,6 +19,7 @@ func TestRegisterSimulationWorkflowWhenFirstRegistrationExpectsSuccess(t *testin
 		Domain:  aws.String(config.Viper.GetString("env")),
 		Name:    aws.String(config.Viper.GetString("SupportOptimizationWorkflowName")),
 		Version: aws.String(config.Viper.GetString("SupportOptimizationWorkflowVersion")),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDeciderTaskTimeout")),
 		DefaultTaskList: &swf.TaskList{
 			Name: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList")),
 		},
