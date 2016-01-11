@@ -2,7 +2,6 @@ package simulationworkflow
 
 import (
 	"errors"
-	"github.com/3dsim/workflow/config"
 	"github.com/3dsim/workflow/logger"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/swf"
@@ -27,12 +26,10 @@ type decider struct {
 }
 
 // NewDecider creates a new decider
-func NewDecider() Decider {
-	taskListName := config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList")
-	identity := config.Viper.GetString("SupportOptimizationWorkflowDeciderIdentity")
+func NewDecider(taskListName, identity, domain string) Decider {
 	decider := &decider{
 		swfAPI:   swf.New(NewSession()),
-		domain:   aws.String(config.Viper.GetString("env")),
+		domain:   aws.String(domain),
 		taskList: &swf.TaskList{Name: aws.String(taskListName)},
 		identity: aws.String(identity),
 	}

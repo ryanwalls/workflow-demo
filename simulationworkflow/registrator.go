@@ -40,11 +40,11 @@ func (r *registrator) InitializeWorkflow() error {
 func (r *registrator) RegisterSimulationWorkflow() error {
 	params := &swf.RegisterWorkflowTypeInput{
 		Domain:  aws.String(config.Viper.GetString("env")),
-		Name:    aws.String(config.Viper.GetString("SupportOptimizationWorkflowName")),
-		Version: aws.String(config.Viper.GetString("SupportOptimizationWorkflowVersion")),
-		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDeciderTaskTimeout")),
+		Name:    aws.String(config.Viper.GetString("supportOptimizationWorkflow.name")),
+		Version: aws.String(config.Viper.GetString("supportOptimizationWorkflow.version")),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("supportOptimizationWorkflow.deciderTaskTimeout")),
 		DefaultTaskList: &swf.TaskList{
-			Name: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList")),
+			Name: aws.String(config.Viper.GetString("supportOptimizationWorkflow.defaultTaskList")),
 		},
 	}
 	resp, err := r.swfAPI.RegisterWorkflowType(params)
@@ -62,7 +62,7 @@ func (r *registrator) RegisterSimulationWorkflow() error {
 func (r *registrator) RegisterDomain() error {
 	params := &swf.RegisterDomainInput{
 		Name: aws.String(config.Viper.GetString("env")),
-		WorkflowExecutionRetentionPeriodInDays: aws.String(config.Viper.GetString("SupportOptimizationWorkflowRetentionPeriod")),
+		WorkflowExecutionRetentionPeriodInDays: aws.String(config.Viper.GetString("DomainExecutionRetentionPeriod")),
 	}
 	resp, err := r.swfAPI.RegisterDomain(params)
 	if err != nil {

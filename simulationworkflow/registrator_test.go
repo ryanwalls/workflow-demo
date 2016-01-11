@@ -17,11 +17,11 @@ func TestRegisterSimulationWorkflowWhenFirstRegistrationExpectsSuccess(t *testin
 	mockSWFAPI := &mocks.SWFAPI{}
 	registerWorkflowTypeInput := &swf.RegisterWorkflowTypeInput{
 		Domain:  aws.String(config.Viper.GetString("env")),
-		Name:    aws.String(config.Viper.GetString("SupportOptimizationWorkflowName")),
-		Version: aws.String(config.Viper.GetString("SupportOptimizationWorkflowVersion")),
-		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDeciderTaskTimeout")),
+		Name:    aws.String(config.Viper.GetString("supportOptimizationWorkflow.name")),
+		Version: aws.String(config.Viper.GetString("supportOptimizationWorkflow.version")),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("supportOptimizationWorkflow.deciderTaskTimeout")),
 		DefaultTaskList: &swf.TaskList{
-			Name: aws.String(config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList")),
+			Name: aws.String(config.Viper.GetString("supportOptimizationWorkflow.defaultTaskList")),
 		},
 	}
 	mockSWFAPI.On("RegisterWorkflowType", registerWorkflowTypeInput).Return(nil, nil)
@@ -72,7 +72,7 @@ func TestRegisterDomainWhenNotRegisteredExpectsSuccess(t *testing.T) {
 	mockSWFAPI := &mocks.SWFAPI{}
 	registerDomainInput := &swf.RegisterDomainInput{
 		Name: aws.String(config.Viper.GetString("env")),
-		WorkflowExecutionRetentionPeriodInDays: aws.String(config.Viper.GetString("SupportOptimizationWorkflowRetentionPeriod")),
+		WorkflowExecutionRetentionPeriodInDays: aws.String(config.Viper.GetString("DomainExecutionRetentionPeriod")),
 	}
 	mockSWFAPI.On("RegisterDomain", registerDomainInput).Return(nil, nil)
 	registrator := &registrator{swfAPI: mockSWFAPI}

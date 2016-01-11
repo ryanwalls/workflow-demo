@@ -1,20 +1,22 @@
 package simulationworkflow
 
 import (
-	"github.com/3dsim/workflow/config"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestNewDecider(t *testing.T) {
 	// arrange
+	taskListName := "someTaskList"
+	identity := "Decider1.0"
+	domain := "dev"
 
 	// act
-	d := NewDecider()
+	d := NewDecider(taskListName, identity, domain)
 
 	// assert
 	deciderStruct := d.(*decider)
-	assert.Equal(t, config.Viper.GetString("SupportOptimizationWorkflowDeciderIdentity"), *deciderStruct.identity)
-	assert.Equal(t, config.Viper.GetString("SupportOptimizationWorkflowDefaultTaskList"), *deciderStruct.taskList.Name)
-	assert.Equal(t, config.Viper.GetString("env"), *deciderStruct.domain)
+	assert.Equal(t, identity, *deciderStruct.identity)
+	assert.Equal(t, taskListName, *deciderStruct.taskList.Name)
+	assert.Equal(t, domain, *deciderStruct.domain)
 }

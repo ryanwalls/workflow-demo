@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"github.com/3dsim/workflow/config"
 	"github.com/3dsim/workflow/logger"
 	"github.com/3dsim/workflow/simulationworkflow"
 	"github.com/spf13/cobra"
@@ -20,6 +21,9 @@ var deciderCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		simulationworkflow.NewDecider().Start()
+		taskListName := config.Viper.GetString("supportOptimizationWorkflow.defaultTaskList")
+		identity := config.Viper.GetString("supportOptimizationWorkflow.deciderIdentity")
+		domain := config.Viper.GetString("env")
+		simulationworkflow.NewDecider(taskListName, identity, domain).Start()
 	},
 }

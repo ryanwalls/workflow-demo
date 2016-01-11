@@ -1,9 +1,4 @@
 ---
 LogLevel: debug
-AwsRegion: us-west-2
-SupportOptimizationWorkflowName: SupportOptimizationWorkflow
-SupportOptimizationWorkflowVersion: "1.0"
-SupportOptimizationWorkflowDefaultTaskList: defaultTaskList
-SupportOptimizationWorkflowRetentionPeriod: 90
-SupportOptimizationWorkflowDeciderIdentity: Decider1.0
-SupportOptimizationWorkflowDeciderTaskTimeout: "60"
+ConsulEndpoint: 192.168.99.100:8500
+DomainExecutionRetentionPeriod: "90"
