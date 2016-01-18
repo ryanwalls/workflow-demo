@@ -17,11 +17,11 @@ func TestRegisterSimulationWorkflowWhenFirstRegistrationExpectsSuccess(t *testin
 	mockSWFAPI := &mocks.SWFAPI{}
 	registerWorkflowTypeInput := &swf.RegisterWorkflowTypeInput{
 		Domain:  aws.String(config.Viper.GetString("env")),
-		Name:    aws.String(config.Viper.GetString("supportOptimizationWorkflow.name")),
-		Version: aws.String(config.Viper.GetString("supportOptimizationWorkflow.version")),
-		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("supportOptimizationWorkflow.deciderTaskTimeout")),
+		Name:    aws.String(config.Workflow.Name),
+		Version: aws.String(config.Workflow.Version),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Workflow.Decider.TaskTimeout),
 		DefaultTaskList: &swf.TaskList{
-			Name: aws.String(config.Viper.GetString("supportOptimizationWorkflow.defaultTaskList")),
+			Name: aws.String(config.Workflow.DefaultTaskList),
 		},
 	}
 	mockSWFAPI.On("RegisterWorkflowType", registerWorkflowTypeInput).Return(nil, nil)

@@ -16,6 +16,7 @@ type Registrator interface {
 	RegisterSimulationWorkflow() error
 	RegisterDomain() error
 	InitializeWorkflow() error
+	RegisterActivity() error
 }
 
 type registrator struct {
@@ -40,11 +41,11 @@ func (r *registrator) InitializeWorkflow() error {
 func (r *registrator) RegisterSimulationWorkflow() error {
 	params := &swf.RegisterWorkflowTypeInput{
 		Domain:  aws.String(config.Viper.GetString("env")),
-		Name:    aws.String(config.Viper.GetString("supportOptimizationWorkflow.name")),
-		Version: aws.String(config.Viper.GetString("supportOptimizationWorkflow.version")),
-		DefaultTaskStartToCloseTimeout: aws.String(config.Viper.GetString("supportOptimizationWorkflow.deciderTaskTimeout")),
+		Name:    aws.String(config.Workflow.Name),
+		Version: aws.String(config.Workflow.Version),
+		DefaultTaskStartToCloseTimeout: aws.String(config.Workflow.Decider.TaskTimeout),
 		DefaultTaskList: &swf.TaskList{
-			Name: aws.String(config.Viper.GetString("supportOptimizationWorkflow.defaultTaskList")),
+			Name: aws.String(config.Workflow.DefaultTaskList),
 		},
 	}
 	resp, err := r.swfAPI.RegisterWorkflowType(params)
@@ -73,5 +74,30 @@ func (r *registrator) RegisterDomain() error {
 		return err
 	}
 	log.Info("Successfully registered domain", "response", resp, "name", *params.Name)
+	return nil
+}
+
+func (r *registrator) RegisterActivity() error {
+	params := &swf.RegisterActivityTypeInput{
+		Domain:                      aws.String(config.Viper.GetString("env")),
+		Name:                        aws.String(config.Workflow.Steps["preproc"].Name),
+		Version:                     aws.String(config.Workflow.Steps["preproc"].ProductionVersion),
+		DefaultTaskHeartbeatTimeout: aws.String(config.Workflow.Steps["preproc"].DefaultTaskHeartbeatTimeout),
+		DefaultTaskList:             &swf.TaskList{},
+	}
+	params.DefaultTaskList.Name = aws.String(*params.Name + "-" + *params.Version)
+
+	_, err := r.swfAPI.RegisterActivityType(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		if awsErr, ok := err.(awserr.Error); ok {
+			log.Info("Received an awsErr", "code", awsErr.Code(), "message", awsErr.Message(), "error", awsErr.Error())
+			return nil
+		}
+		return err
+	}
+
 	return nil
 }

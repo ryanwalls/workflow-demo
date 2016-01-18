@@ -1,4 +1,40 @@
 ---
-LogLevel: debug
-ConsulEndpoint: 192.168.99.100:8500
-DomainExecutionRetentionPeriod: "90"
+  LogLevel: debug
+  ConsulEndpoint: 192.168.99.100:8500
+  DomainExecutionRetentionPeriod: "90"
+
+  # TODO put in consul/etcd
+  supportOptimizationWorkflow:
+    version: "1.0"
+    name: SupportOptimizationWorkflow
+    defaultTaskList: defaultTaskList
+    decider:
+      taskTimeout: "60"
+      name: SupportOptimizationWorkflowDecider
+      version: "0.0.1"
+    # Must match keys for steps dictionary below
+    stepOrder:
+      - preproc
+      - thermalsolver
+      - mechanicssolver
+    steps:
+      preproc:
+        name: Preprocessor
+        productionVersion: "0.0.1"
+        experimentalVersions:
+          - "0.0.2"
+          - "0.0.3"
+        scheduleToCloseTimeout: NONE
+        scheduleToStartTimeout: NONE
+        startToCloseTimeout: NONE
+        defaultTaskHeartbeatTimeout: "90"
+      thermalsolver:
+        name: Thermal Solver
+        productionVersion: "0.0.2"
+        experimentalVersions:
+          - "0.0.3"
+          - "0.0.4"
+        scheduleToCloseTimeout: NONE
+        scheduleToStartTimeout: NONE
+        startToCloseTimeout: NONE
+        defaultTaskHeartbeatTimeout: "90"

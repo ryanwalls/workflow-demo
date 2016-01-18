@@ -24,7 +24,6 @@ func init() {
 	v.BindEnv("env")
 	env := v.GetString("env")
 	SetEnvironmentSpecificConfig(v, env)
-	Viper = &config{v}
 }
 
 // SetEnvironmentSpecificConfig sets the configuration to match the given env.
@@ -66,10 +65,11 @@ func SetEnvironmentSpecificConfig(v *viper.Viper, env string) {
 	// Read config from consul
 	v.AddRemoteProvider("consul", v.GetString("ConsulEndpoint"), v.GetString("ConsulSupportOptimizationWorkflowConfig"))
 	v.SetConfigType("yaml")
-	err = v.ReadRemoteConfig() // Find and read the config file
-	if err != nil {            // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error reading remote config file: %s \n", err))
-	}
+	// err = v.ReadRemoteConfig() // Find and read the config file
+	// if err != nil {            // Handle errors reading the config file
+	// 	panic(fmt.Errorf("Fatal error reading remote config file: %s \n", err))
+	// }
+	Viper = &config{v}
 }
 
 func exists(path string) (bool, error) {

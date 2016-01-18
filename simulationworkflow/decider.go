@@ -1,7 +1,8 @@
 package simulationworkflow
 
 import (
-	"errors"
+	"bytes"
+	"encoding/json"
 	"github.com/3dsim/workflow/logger"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/swf"
@@ -50,7 +51,35 @@ func (d *decider) Start() {
 }
 
 func (d *decider) decide(decisionTask *swf.PollForDecisionTaskOutput) error {
-	return errors.New("Not implemented yet")
+	taskBytes, err := json.Marshal(decisionTask)
+	if err != nil {
+		d.Error("Error marshalling", "err", err)
+	}
+	d.Info("Decision task received", "task", bytes.NewBuffer(taskBytes))
+	if isWorkflowExecutionJustStarted(decisionTask) {
+		decisionCompletedInput := &swf.RespondDecisionTaskCompletedInput{}
+		decisionCompletedInput.TaskToken = decisionTask.TaskToken
+
+		decision := &swf.Decision{}
+		decision.DecisionType = aws.String(swf.DecisionTypeScheduleActivityTask)
+		decision.ScheduleActivityTaskDecisionAttributes = &swf.ScheduleActivityTaskDecisionAttributes{
+			// TODO this should be a unique ID see http://stackoverflow.com/questions/28992136/what-is-the-activity-id-in-aws-swf
+			ActivityId: aws.String("2"), // Required
+			// TODO don't hard code these values
+			ActivityType: &swf.ActivityType{ // Required
+				Name:    aws.String("preproc"), // Required
+				Version: aws.String("1.0"),     // Required
+			},
+			ScheduleToCloseTimeout: aws.String("NONE"),
+			ScheduleToStartTimeout: aws.String("NONE"),
+			StartToCloseTimeout:    aws.String("NONE"),
+		}
+		decisionCompletedInput.Decisions = []*swf.Decision{decision}
+		d.Info("Decision made. Scheduling activity task.", "activityName", "preproc", "activityVersion", "1.0")
+		_, err := d.swfAPI.RespondDecisionTaskCompleted(decisionCompletedInput)
+		return err
+	}
+	return nil
 }
 
 func (d *decider) pollForDecisionTasks() chan *swf.PollForDecisionTaskOutput {
