@@ -32,7 +32,7 @@ func TestIsWorkflowExecutionJustStartedWhenStartedExpectsTrue(t *testing.T) {
 	decisionTask := &swf.PollForDecisionTaskOutput{PreviousStartedEventId: aws.Int64(0), StartedEventId: aws.Int64(3)}
 
 	// act
-	isJustStarted := isWorkflowExecutionJustStarted(decisionTask)
+	isJustStarted := IsWorkflowExecutionJustStarted(decisionTask)
 
 	// assert
 	assert.True(t, isJustStarted, "Should return true because the previous started id is 0 and started id is nonzero")
@@ -43,7 +43,7 @@ func TestIsWorkflowExecutionJustStartedWhenNotStartedExpectsFalse(t *testing.T) 
 	decisionTask := &swf.PollForDecisionTaskOutput{PreviousStartedEventId: aws.Int64(0), StartedEventId: aws.Int64(0)}
 
 	// act
-	isJustStarted := isWorkflowExecutionJustStarted(decisionTask)
+	isJustStarted := IsWorkflowExecutionJustStarted(decisionTask)
 
 	// assert
 	assert.False(t, isJustStarted, "Should return false because the previous started id is 0 and started id is 0")

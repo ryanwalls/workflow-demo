@@ -29,6 +29,11 @@ type simulationStateManager struct {
 	log15.Logger
 }
 
+type StateData struct {
+	Count   int
+	Message string
+}
+
 func NewSimulationStateManager(taskListName, identity, domain string) SimulationStateManager {
 	simulationStateManager := &simulationStateManager{
 		swfAPI:   swf.New(NewSession()),
