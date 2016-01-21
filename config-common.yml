@@ -1,0 +1,3 @@
+---
+AwsRegion: us-west-2
+ConsulSupportOptimizationWorkflowConfig: config/supportoptimizationworkflow/1.0.yaml
