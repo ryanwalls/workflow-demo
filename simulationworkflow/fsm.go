@@ -54,7 +54,7 @@ func (s *simulationStateManager) setupFSM() *fsm.FSM {
 	typed := fsm.Typed(new(StateData))
 
 	startState := &fsm.FSMState{Name: "start", Decider: typed.Decider(waitForStart)}
-	preprocState := &fsm.FSMState{Name: "preproc", Decider: fsm.CompleteWorkflow()}
+	preprocState := &fsm.FSMState{Name: "preproc", Decider: typed.Decider(waitForPreproc)}
 
 	simulationFSM.AddInitialState(startState)
 	simulationFSM.AddState(preprocState)
@@ -90,12 +90,31 @@ var waitForStart = func(f *fsm.FSMContext, h *swf.HistoryEvent, stateData *State
 				Name:    aws.String("preproc"), // Required
 				Version: aws.String("1.0"),     // Required
 			},
-			ScheduleToCloseTimeout: aws.String("NONE"),
-			ScheduleToStartTimeout: aws.String("NONE"),
-			StartToCloseTimeout:    aws.String("NONE"),
 		}
 		decisions = append(decisions, decision)
 		return f.Goto("preproc", stateData, decisions)
+	}
+	//if the event was unexpected just stay here
+	return f.Stay(stateData, decisions)
+}
+
+var waitForPreproc = func(f *fsm.FSMContext, lastEvent *swf.HistoryEvent, stateData *StateData) fsm.Outcome {
+	decisions := f.EmptyDecisions()
+	switch *lastEvent.EventType {
+	case swf.EventTypeActivityTaskCompleted:
+		logger.Log.Info("Previous scheduled activity completed successfully")
+		decision := &swf.Decision{}
+		decision.DecisionType = aws.String(swf.DecisionTypeCompleteWorkflowExecution)
+		decision.CompleteWorkflowExecutionDecisionAttributes = &swf.CompleteWorkflowExecutionDecisionAttributes{}
+		decisions = append(decisions, decision)
+	case swf.EventTypeActivityTaskFailed:
+		logger.Log.Error("Activity task failed", "lastEvent", lastEvent)
+		decision := &swf.Decision{}
+		decision.DecisionType = aws.String(swf.DecisionTypeFailWorkflowExecution)
+		decision.FailWorkflowExecutionDecisionAttributes = &swf.FailWorkflowExecutionDecisionAttributes{
+			Reason: sugar.S("Preproc failed"),
+		}
+		decisions = append(decisions, decision)
 	}
 	//if the event was unexpected just stay here
 	return f.Stay(stateData, decisions)
