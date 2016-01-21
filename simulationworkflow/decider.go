@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/3dsim/workflow/logger"
+	"github.com/3dsim/workflow/swfhelper"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/swf"
 	"github.com/aws/aws-sdk-go/service/swf/swfiface"
@@ -56,7 +57,7 @@ func (d *decider) decide(decisionTask *swf.PollForDecisionTaskOutput) error {
 		d.Error("Error marshalling", "err", err)
 	}
 	d.Info("Decision task received", "task", bytes.NewBuffer(taskBytes))
-	if isWorkflowExecutionJustStarted(decisionTask) {
+	if swfhelper.IsWorkflowExecutionJustStarted(decisionTask) {
 		decisionCompletedInput := &swf.RespondDecisionTaskCompletedInput{}
 		decisionCompletedInput.TaskToken = decisionTask.TaskToken
 

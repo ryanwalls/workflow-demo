@@ -1,20 +1,25 @@
 package: main
 import:
-  - package: github.com/spf13/cobra
-  - package: github.com/spf13/pflag
-  - package: github.com/inconshreveable/log15
-  - package: github.com/spf13/viper
-  - package: github.com/BurntSushi/toml
-  - package: github.com/kr/pretty
-  - package: github.com/mattn/go-colorable
-  - package: github.com/mitchellh/mapstructure
-  - package: github.com/spf13/cast
-  - package: github.com/spf13/jwalterweatherman
-  - package: gopkg.in/fsnotify.v1
-  - package: gopkg.in/yaml.v2
-  - package: github.com/kr/text
-  - package: github.com/magiconair/properties
-  - package: github.com/aws/aws-sdk-go
-  - package: github.com/stretchr/testify
-    subpackages:
-      - /mock
+- package: github.com/spf13/cobra
+- package: github.com/spf13/pflag
+- package: github.com/inconshreveable/log15
+- package: github.com/spf13/viper
+- package: github.com/BurntSushi/toml
+- package: github.com/kr/pretty
+- package: github.com/mattn/go-colorable
+- package: github.com/mitchellh/mapstructure
+- package: github.com/spf13/cast
+- package: github.com/spf13/jwalterweatherman
+- package: gopkg.in/fsnotify.v1
+- package: gopkg.in/yaml.v2
+- package: github.com/kr/text
+- package: github.com/magiconair/properties
+- package: github.com/aws/aws-sdk-go
+- package: github.com/stretchr/testify
+  subpackages:
+  - /mock
+- package: github.com/sclasen/swfsm
+  subpackages:
+  - /fsm
+  - /sugar
+- package: github.com/twinj/uuid
