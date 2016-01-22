@@ -12,3 +12,7 @@ Disclaimer to start:  I think this is related to threading, goroutines, channels
 * Run the docker image:  `docker run --rm -e "AWS_ACCESS_KEY_ID=<Your Access Key>" -e "AWS_SECRET_ACCESS_KEY=<Your secret>" workflow fsm`
 
 NOTE: Running this will register a workflow in a "dev" domain in SWF.
+
+# To demonstrate working polling
+Follow procedure above, but final step run:
+* Run the docker image:  `docker run --rm -e "AWS_ACCESS_KEY_ID=<Your Access Key>" -e "AWS_SECRET_ACCESS_KEY=<Your secret>" workflow decider`
