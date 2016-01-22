@@ -79,11 +79,14 @@ func (r *registrator) RegisterDomain() error {
 
 func (r *registrator) RegisterActivity() error {
 	params := &swf.RegisterActivityTypeInput{
-		Domain:                      aws.String(config.Viper.GetString("env")),
-		Name:                        aws.String(config.Workflow.Steps["preproc"].Name),
-		Version:                     aws.String(config.Workflow.Steps["preproc"].ProductionVersion),
-		DefaultTaskHeartbeatTimeout: aws.String(config.Workflow.Steps["preproc"].DefaultTaskHeartbeatTimeout),
-		DefaultTaskList:             &swf.TaskList{},
+		Domain:                            aws.String(config.Viper.GetString("env")),
+		Name:                              aws.String(config.Workflow.Steps["preproc"].Name),
+		Version:                           aws.String(config.Workflow.Steps["preproc"].ProductionVersion),
+		DefaultTaskHeartbeatTimeout:       aws.String(config.Workflow.Steps["preproc"].DefaultTaskHeartbeatTimeout),
+		DefaultTaskStartToCloseTimeout:    aws.String(config.Workflow.Steps["preproc"].StartToCloseTimeout),
+		DefaultTaskScheduleToCloseTimeout: aws.String(config.Workflow.Steps["preproc"].ScheduleToCloseTimeout),
+		DefaultTaskScheduleToStartTimeout: aws.String(config.Workflow.Steps["preproc"].ScheduleToStartTimeout),
+		DefaultTaskList:                   &swf.TaskList{},
 	}
 	params.DefaultTaskList.Name = aws.String(*params.Name + "-" + *params.Version)
 

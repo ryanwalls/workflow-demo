@@ -20,5 +20,7 @@ var fsmCmd = &cobra.Command{
 		identity := config.Viper.GetString("supportOptimizationWorkflow.deciderIdentity")
 		domain := config.Viper.GetString("env")
 		simulationworkflow.NewSimulationStateManager(taskListName, identity, domain).Start()
+		for {
+		}
 	},
 }

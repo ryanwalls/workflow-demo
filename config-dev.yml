@@ -19,7 +19,7 @@
       - mechanicssolver
     steps:
       preproc:
-        name: Preprocessor
+        name: preproc
         productionVersion: "0.0.1"
         experimentalVersions:
           - "0.0.2"
@@ -29,7 +29,7 @@
         startToCloseTimeout: NONE
         defaultTaskHeartbeatTimeout: "90"
       thermalsolver:
-        name: Thermal Solver
+        name: thermalsolver
         productionVersion: "0.0.2"
         experimentalVersions:
           - "0.0.3"

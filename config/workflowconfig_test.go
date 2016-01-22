@@ -16,12 +16,12 @@ func TestWorkflowConfigInitialization(t *testing.T) {
 	assert.Equal(t, "preproc", Workflow.StepOrder[0])
 	assert.Equal(t, "thermalsolver", Workflow.StepOrder[1])
 	assert.Equal(t, "mechanicssolver", Workflow.StepOrder[2])
-	assert.Equal(t, "Preprocessor", Workflow.Steps[Workflow.StepOrder[0]].Name)
+	assert.Equal(t, "preproc", Workflow.Steps[Workflow.StepOrder[0]].Name)
 	assert.Equal(t, "NONE", Workflow.Steps[Workflow.StepOrder[0]].ScheduleToCloseTimeout)
 }
 
 func TestStepOrdersMatchSteps(t *testing.T) {
 	stepOrder := Viper.GetStringSlice("supportOptimizationWorkflow.stepOrder")
 	preprocValue := Viper.GetStringMap("supportOptimizationWorkflow.steps." + stepOrder[0])
-	assert.Equal(t, "Preprocessor", preprocValue["name"])
+	assert.Equal(t, "preproc", preprocValue["name"])
 }

@@ -22,10 +22,13 @@ var workerCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		taskListName := "preproc-1.0"
-		identity := config.Viper.GetString("supportOptimizationWorkflow.steps.one.name") +
-			config.Viper.GetString("supportOptimizationWorkflow.steps.one.production")
+		preprocTaskList := config.Workflow.Steps["preproc"].Name + "-" +
+			config.Workflow.Steps["preproc"].ProductionVersion
+		taskListName := preprocTaskList
+		identity := preprocTaskList
 		domain := config.Viper.GetString("env")
 		simulationworkflow.NewWorker(taskListName, identity, domain).Start()
+		for {
+		}
 	},
 }
