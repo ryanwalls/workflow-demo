@@ -8,5 +8,5 @@ import (
 
 // NewSession creates a new session for the workflow in the appropriate region
 func NewSession() *session.Session {
-	return session.New(&aws.Config{Region: aws.String(config.Viper.GetString("AwsRegion"))})
+	return session.New(&aws.Config{LogLevel: aws.LogLevel(aws.LogDebugWithRequestErrors), Region: aws.String(config.Viper.GetString("AwsRegion"))})
 }

@@ -13,21 +13,27 @@ import (
 	"testing"
 )
 
-type TestData struct{}
-
 var testActivityInfo = fsm.ActivityInfo{ActivityId: "activityId", ActivityType: &swf.ActivityType{Name: sugar.S("activity"), Version: sugar.S("activityVersion")}}
 var testWorkflowExecution = &swf.WorkflowExecution{WorkflowId: sugar.S("workflow-id"), RunId: sugar.S("run-id")}
 var testWorkflowType = &swf.WorkflowType{Name: sugar.S("workflow-name"), Version: sugar.S("workflow-version")}
 
+var testData = &StateData{
+	CustomerID:         1,
+	S3SimulationFolder: "Customer_1/simulation172_2016-01-22",
+	SimulationResultID: 172,
+}
+
 func TestFSMWhenStartingNewWorkflowExpectsPreprocScheduled(t *testing.T) {
 	// arrange
+	// {"CustomerId": 1, "SimulationResultId": 172, "S3SimulationFolder": "Customer_1/simulation172_2016-01-22"}
+
 	simulationStateManager := &simulationStateManager{}
 	simulationStateManager.FSM = simulationStateManager.setupFSM()
 	events := []*swf.HistoryEvent{
 		&swf.HistoryEvent{EventType: sugar.S("DecisionTaskStarted"), EventId: sugar.I(3)},
 		&swf.HistoryEvent{EventType: sugar.S("DecisionTaskScheduled"), EventId: sugar.I(2)},
 		sugar.EventFromPayload(1, &swf.WorkflowExecutionStartedEventAttributes{
-			Input: fsm.StartFSMWorkflowInput(simulationStateManager.FSM, new(TestData)),
+			Input: fsm.StartFSMWorkflowInput(simulationStateManager.FSM, testData),
 		}),
 	}
 	firstDecisionTask := testDecisionTask(0, events)
@@ -48,7 +54,7 @@ func TestFSMWhenInPreprocStateAndPreprocSuccessfullyCompletesExpectsWorkflowComp
 
 	serializedState := &fsm.SerializedState{}
 	serializedState.StateName = "preproc"
-	serializedState.StateData = simulationStateManager.FSM.Serialize(&TestData{})
+	serializedState.StateData = simulationStateManager.FSM.Serialize(testData)
 	serializedState.StateVersion = 1
 
 	markerRecordedEvent := sugar.EventFromPayload(5, &swf.MarkerRecordedEventAttributes{
@@ -56,11 +62,13 @@ func TestFSMWhenInPreprocStateAndPreprocSuccessfullyCompletesExpectsWorkflowComp
 		Details:    sugar.S(simulationStateManager.FSM.Serialize(serializedState)),
 	})
 
+	preprocResult := `{"CustomerId":1,"SimulationResultId":172,"S3SimulationFolder":"Customer_1/simulation172_2016-01-22","FileLocation":"Customer_1/simulation172_2016-01-22/b308147a-a73c-493f-bf10-478219419057_scanpattern.zip","ZoxFileLocation":"Customer_1/simulation172_2016-01-22/035c0f01-d53a-4b36-bbaa-21650a0e2a64_voxel.zip","CoarseZoxFileLocation":"Customer_1/simulation172_2016-01-22/035c0f01-d53a-4b36-bbaa-21650a0e2a64_voxel.zip","MediumZoxFileLocation":"Customer_1/simulation172_2016-01-22/035c0f01-d53a-4b36-bbaa-21650a0e2a64_voxel.zip","FineZoxFileLocation":"Customer_1/simulation172_2016-01-22/035c0f01-d53a-4b36-bbaa-21650a0e2a64_voxel.zip","sizeX":0.001,"sizeY":0.001,"sizeZ":0.001}`
 	events := []*swf.HistoryEvent{
 		&swf.HistoryEvent{EventType: sugar.S("DecisionTaskStarted"), EventId: sugar.I(9)},
 		&swf.HistoryEvent{EventType: sugar.S("DecisionTaskScheduled"), EventId: sugar.I(8)},
 		sugar.EventFromPayload(7, &swf.ActivityTaskCompletedEventAttributes{
 			ScheduledEventId: sugar.I(6),
+			Result:           sugar.S(preprocResult),
 		}),
 		sugar.EventFromPayload(6, &swf.ActivityTaskScheduledEventAttributes{
 			ActivityId:   sugar.S(testActivityInfo.ActivityId),
@@ -77,6 +85,8 @@ func TestFSMWhenInPreprocStateAndPreprocSuccessfullyCompletesExpectsWorkflowComp
 	assert.Nil(t, err, "Should be no errors")
 	assert.NotNil(t, decisions, "Should have returned some decisions")
 	assert.True(t, Find(decisions, workflowCompletedPredicate), "Should have completed the workflow")
+	workflowCopmletedDecision := FindDecision(decisions, workflowCompletedPredicate)
+	assert.Equal(t, preprocResult, *workflowCopmletedDecision.CompleteWorkflowExecutionDecisionAttributes.Result, "Should have passed the result from preproc onto next decision")
 }
 
 func TestFSMWhenInPreprocStateAndPreprocFailsExpectsWorkflowFailed(t *testing.T) {
@@ -86,7 +96,7 @@ func TestFSMWhenInPreprocStateAndPreprocFailsExpectsWorkflowFailed(t *testing.T)
 
 	serializedState := &fsm.SerializedState{}
 	serializedState.StateName = "preproc"
-	serializedState.StateData = simulationStateManager.FSM.Serialize(&TestData{})
+	serializedState.StateData = simulationStateManager.FSM.Serialize(testData)
 	serializedState.StateVersion = 1
 
 	markerRecordedEvent := sugar.EventFromPayload(5, &swf.MarkerRecordedEventAttributes{
